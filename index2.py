@@ -7,6 +7,9 @@ import os
 import requests 
 from requests_aws4auth import AWS4Auth
     #Setup Elastic Search Indices
+session = Session()
+credentials = session.get_credentials()
+service='es'
 ES_ENDPOINT = "http://" + os.environ['ES_ENDPOINT'] 
 awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service, session_token=credentials.token)
 #Delete All Indices
