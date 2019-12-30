@@ -1,8 +1,6 @@
 import json
 import time
 import datetime
-import urllib.request
-import urllib
 import boto3
 import decimal
 import os
