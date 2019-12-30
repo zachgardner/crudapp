@@ -1,0 +1,195 @@
+<html>
+<head>
+<title>Octank Bike Share - Real-time Station Status</title>
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+   crossorigin=""></script>
+</head>
+<style>
+#mapid { height: 580px; }
+.info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
+.legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
+.mytable { padding: 6px 8px; font: 18px/20px Arial, Helvetica, sans-serif; background: grey; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; } .vals { color: #777 }
+</style>
+<body>
+<div style="font: 28px Arial, Helvetica">Octank Bike Share - Real-time Station Status</div>
+<div id="mapid"></div>
+<center>
+<table class="mytable">
+<tr><td>Last Updated: </td><td><span class="vals" id="last_updated"></span></td></tr>
+<tr><td>Bikes In Service: </td><td class="vals" align="right"><span id="bikes_in_service"></span></td></tr>
+<tr><td>Bikes Available: </td><td class="vals" align="right"><span id="bikes_available"></span></td></tr>
+<tr><td>Bikes Disabled: </td><td class="vals" align="right"><span id="bikes_disabled"></span></td></tr>
+</table>
+</center>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+var bikesAvailable = 0
+var bikesDisabled = 0
+var bikesInService = 0
+var lastUpdated = ""
+var mymap = L.map('mapid', {maxZoom: 22}).setView([40.7397, -73.9945], 14);
+
+
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery Â© <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoiZHJha2Vkb24iLCJhIjoiY2p5cTc3cWNjMDMwbjNkcDN1cHNnYmI2OSJ9.HiJbzxD_qVcjLq2fpvmoDg'
+}).addTo(mymap);
+mymap.attributionControl.addAttribution('Map by <a href="http://mb3.dondrake.com/">Don Drake.</a> ')
+
+var legend = L.control({position: 'bottomright'});
+legend.onAdd = function(map) {
+	var div = L.DomUtil.create('div', 'info legend')
+	div.innerHTML=('<i style="background: #003"></i> Bikes Available == 0 <br>' +
+	'<i style="background: #f03"></i> Bikes Available <= 5 <br>' + 
+	'<i style="background: #fc0"></i> Bikes Available <= 10 <br>' +
+	'<i style="background: #0f3"></i> Bikes Available > 10 <br>')
+	return div
+};
+legend.addTo(mymap)
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+if (!sessionStorage.getItem("ESUrl")) {
+	getESProperties();
+}
+
+function getESProperties(){
+	var ESUrl = prompt("Where is your Elastic Search Cluster", "https://search-bikedemo-2pkhvhryvuxh5xarhnnj5egvky.us-east-1.es.amazonaws.com");
+sessionStorage.setItem("ESUrl", ESUrl);
+}
+
+var stationList = {}
+var stationURL = "https://gbfs.citibikenyc.com/gbfs/en/station_information.json"
+stationURL = sessionStorage.getItem("ESUrl") + "/stations/_search?pretty=true&q=*:*&size=928"
+var statusURL = "https://gbfs.citibikenyc.com/gbfs/en/station_status.json"
+statusURL = sessionStorage.getItem("ESUrl") + "/stationdetails/_search"
+
+$.getJSON(stationURL).done(function( data ) {
+	//console.log("data=" + data)
+	var stations = data.hits.hits
+	//console.log("stations=" + stations)
+	$.each(stations, function( i, item) {
+		//console.log("i=" + i + ", item=" + item)
+		item['marker'] = L.circle([item._source.lat, item._source.lon], {
+			color: 'blue',
+			fillColor: '#003',
+			fillOpacity: 0.5,
+			radius: 80
+		}).addTo(mymap)
+		stationList[parseInt(item._source.station_id)] = item
+	})
+	 getStations();
+
+})
+
+function getStations() {
+	//console.log("getStations()")
+	var query = '{"size":934,"query":{"match_all":{}},"collapse":{"field":"station_id","inner_hits":{"name":"most_recent","size":1,"sort":[{"last_reported":"desc"}]}}}'
+
+	$.ajax({
+  		type: "POST",
+  		url: statusURL,
+  		data: query,
+        contentType: "application/json",
+  		complete: function(response){
+  		data = JSON.parse(response.responseText)
+  		//lastUpdated = buildDate(data.hits.hits[0].last_updated)
+  		
+  		latest_item = sessionStorage.getItem("ESUrl") + "/stationdetails/_search"
+  		latest_payload = '{"size":1, "aggs" : {"last_reported" : { "max" : { "field" : "last_reported"}}}}'
+  		postLatestDate(latest_item, latest_payload)
+
+		var stations = data.hits.hits
+		bikesAvailable = 0
+		bikesDisabled = 0
+		bikesInService = 0
+
+		$.each(stations, function( i, item) {
+			if (item._source){
+			bikesAvailable += parseInt(item._source.num_bikes_available)
+			bikesDisabled += parseInt(item._source.num_bikes_disabled)
+			stationId = parseInt(item._source.station_id)
+			bikeAvailability = parseInt(item._source.num_bikes_available)
+			if(stationList[stationId] && stationList[stationId]._source){
+			bikesInService += (stationList[stationId]._source.capacity - item._source.num_bikes_available - item._source.num_bikes_disabled)
+			console.log(stationId)
+			color = 'green'
+			fillColor = '#0f3'
+			if (bikeAvailability <= 10 ) {
+				color = 'yellow'
+				fillColor = '#fc0'
+			}
+			if (bikeAvailability <= 5 ) {
+				color = 'red'
+				fillColor = '#f03'
+			}
+			if (bikeAvailability == 0 ) {
+				color = 'black'
+				fillColor = '#003'
+			}
+			//console.log("stationId=" + stationId)
+			//console.log("station= %o", stationList[stationId])
+			//console.log("avail=" + item._source.num_bikes_available + ", color=" + color)
+			mymap.removeLayer(stationList[stationId].marker)
+			stationList[stationId].marker = L.circle([stationList[stationId]._source.lat, stationList[stationId]._source.lon], {
+                        color: color,
+                        fillColor: fillColor,
+                        fillOpacity: 0.5,
+                        radius: 80
+                }).addTo(mymap).bindTooltip('<span style="font: 16pt arial">' + stationList[stationId]._source.name + "</span><br>" + 
+						"<b>Station Id:</b> " + stationId + "<br>" +
+						"<b># Bikes Available: </b>" + item._source.num_bikes_available + "<br>" +
+						"<b># Bikes Disabled: </b>" + item._source.num_bikes_disabled + "<br>" + 
+						"<b># Docks Available: </b>" + stationList[stationId]._source.capacity )
+                }
+            }
+		})
+  		}
+  			,
+  		dataType: "json"
+	});
+
+
+	$("#bikes_available").text(numberWithCommas(bikesAvailable));
+	$("#bikes_disabled").text(numberWithCommas(bikesDisabled));
+	$("#bikes_in_service").text(numberWithCommas(bikesInService));
+}
+
+function postLatestDate(url,payload) {
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: payload,
+        contentType: "application/json",
+        dataType: "json",
+        success: function(data) {
+            console.log(data)
+	  		var timeInSeconds = data.hits.hits[0]._source.last_reported;
+			var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+			d.setUTCSeconds(timeInSeconds)
+			lastUpdated = d
+			$("#last_updated").text(numberWithCommas(lastUpdated));
+
+        },
+        error: function() {
+            alert('Error occured');
+        }
+    });
+}
+
+
+
+setInterval(getStations, 5000)
+</script>
+
+</body>
+</html>
