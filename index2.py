@@ -26,7 +26,7 @@ print(req.text)
 path='/stationdetails'
 url = ES_ENDPOINT + '' + path
 print(url)
-values = '{"settings":{"number_of_shards":3,"number_of_replicas":2},"mappings":{"fromFirehose":{"properties":{"date":{"type":"date"},"eightd_has_available_keys":{"type":"text"},"is_installed":{"type":"integer"},"is_renting":{"type":"integer"},"is_returning":{"type":"integer"},"last_reported":{"type":"integer"},"num_bikes_available":{"type":"integer"},"num_bikes_disabled":{"type":"integer"},"num_docks_available":{"type":"integer"},"num_docks_disabled":{"type":"integer"},"num_ebikes_available":{"type":"integer"},"station_id":{"type":"integer"},"time":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}}}}}}'
+values = '{"settings":{"number_of_shards":3,"number_of_replicas":2},"mappings":{"fromFirehose1":{"properties":{"date":{"type":"date"},"eightd_has_available_keys":{"type":"text"},"is_installed":{"type":"integer"},"is_renting":{"type":"integer"},"is_returning":{"type":"integer"},"last_reported":{"type":"integer"},"num_bikes_available":{"type":"integer"},"num_bikes_disabled":{"type":"integer"},"num_docks_available":{"type":"integer"},"num_docks_disabled":{"type":"integer"},"num_ebikes_available":{"type":"integer"},"station_id":{"type":"integer"},"time":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}}}}}}'
 values = json.loads(values)
 req = requests.put(url=url, data=json.dumps(values), headers=headers, auth=awsauth)
 print(req.text)
