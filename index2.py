@@ -22,7 +22,7 @@ headers = {'Content-Type': 'application/json', 'Accept': 'text/plain'}
 req = requests.delete(url=url, headers=headers, auth=awsauth)
 print(req.text)
 
-#Station Details Index
+#Station Details Index Put
 path='/stationdetails'
 url = ES_ENDPOINT + '' + path
 print(url)
@@ -31,7 +31,7 @@ values = json.loads(values)
 req = requests.put(url=url, data=json.dumps(values), headers=headers, auth=awsauth)
 print(req.text)
 
-#Station Index
+#Station Index Put
 path='/stations'
 url = ES_ENDPOINT + '' + path
 values = '{"settings":{"number_of_shards":3,"number_of_replicas":2},"mappings":{"fromFirehose":{"properties":{"capacity":{"type":"long"},"eightd_has_key_dispenser":{"type":"boolean"},"eightd_station_services":{"properties":{"bikes_availability":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"description":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"docks_availability":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"id":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"link_for_more_info":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"name":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"schedule_description":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"service_type":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}}}},"electric_bike_surcharge_waiver":{"type":"boolean"},"external_id":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"has_kiosk":{"type":"boolean"},"lat":{"type":"float"},"location":{"properties":{"lat":{"type":"geo_point"},"lon":{"type":"geo_point"}}},"lon":{"type":"float"},"name":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"region_id":{"type":"long"},"rental_methods":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"rental_url":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"short_name":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}},"station_id":{"type":"text","fields":{"keyword":{"type":"keyword","ignore_above":256}}}}}}}'
