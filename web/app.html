@@ -72,7 +72,7 @@ var stationList = {}
 var stationURL = "https://gbfs.citibikenyc.com/gbfs/en/station_information.json"
 stationURL = sessionStorage.getItem("ESUrl") + "/stations/_search?pretty=true&q=*:*&size=928"
 var statusURL = "https://gbfs.citibikenyc.com/gbfs/en/station_status.json"
-statusURL = sessionStorage.getItem("ESUrl") + "/stationdetails/_search"
+statusURL = sessionStorage.getItem("ESUrl") + "/stationsstatus/_search"
 
 $.getJSON(stationURL).done(function( data ) {
 	//console.log("data=" + data)
