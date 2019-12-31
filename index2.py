@@ -39,18 +39,20 @@ values = json.loads(values)
 req = requests.put(url=url, data=json.dumps(values),  headers=headers, auth=awsauth)
 print(req.text)
 
-dynamodb = boto3.resource('dynamodb', region_name=region) 
+dynamodb = boto3.resource('dynamodb', region_name=region)
 client = boto3.client('firehose', region_name=region)
 STATION_DETAIL_TABLE =  os.environ['STATION_DETAIL_TABLE']
 STATION_DETAIL_DATA_URL =  os.environ['STATION_DETAIL_DATA_URL']
 ES_FIREHOSE_STREAM_NAME_STATION_INFO = os.environ['FIREHOSE_STREAM_NAME_STATION_INFO']
 detailTable = dynamodb.Table(STATION_DETAIL_TABLE)
 stationDataURL = requests.get(STATION_DETAIL_DATA_URL)
-stations = json.loads(stationDataURL)
 
+stations = json.loads(stationDataURL.text)
 for station in stations['data']['stations']:
-	client.put_record(DeliveryStreamName=ES_FIREHOSE_STREAM_NAME_STATION_INFO, Record={'Data': json.dumps(station)})
-	str_station = str(station).replace("''", "'NONE'").replace("\'", "\"").replace('False', '"False"').replace('True', '"True"')
-	json_station = json.loads(str_station,parse_float=decimal.Decimal)
-	response = detailTable.put_item(TableName=STATION_DETAIL_TABLE,Item=json_station)
-# TODO implement
+        station = json.dumps(station)
+        client.put_record(DeliveryStreamName=ES_FIREHOSE_STREAM_NAME_STATION_INFO, Record={'Data': json.dumps(station)})
+        str_station = str(station).replace('""', '"NONE"').replace("\'", "\"").replace('False', '"False"').replace('True', '"True"')
+        print(str_station)
+        json_station = json.loads(str_station,parse_float=decimal.Decimal)
+        response = detailTable.put_item(TableName=STATION_DETAIL_TABLE,Item=json_station)
+
