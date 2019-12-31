@@ -105,7 +105,7 @@ function getStations() {
   		data = JSON.parse(response.responseText)
   		//lastUpdated = buildDate(data.hits.hits[0].last_updated)
   		
-  		latest_item = sessionStorage.getItem("ESUrl") + "/stationdetails/_search"
+  		latest_item = sessionStorage.getItem("ESUrl") + "/stationsstatus/_search"
   		latest_payload = '{"size":1, "aggs" : {"last_reported" : { "max" : { "field" : "last_reported"}}}}'
   		postLatestDate(latest_item, latest_payload)
 
