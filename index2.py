@@ -49,7 +49,7 @@ stationDataURL = requests.get(STATION_DETAIL_DATA_URL)
 stations = json.loads(stationDataURL.text)
 for station in stations['data']['stations']:
         station = json.dumps(station)
-        client.put_record(DeliveryStreamName=ES_FIREHOSE_STREAM_NAME_STATION_INFO, Record={'Data': json.dumps(station)})
+        client.put_record(DeliveryStreamName=ES_FIREHOSE_STREAM_NAME_STATION_INFO, Record={'Data': station})
         str_station = str(station).replace('""', '"NONE"').replace("\'", "\"").replace('False', '"False"').replace('True', '"True"')
         json_station = json.loads(str_station,parse_float=decimal.Decimal)
         response = detailTable.put_item(TableName=STATION_DETAIL_TABLE,Item=json_station)
