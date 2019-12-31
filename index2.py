@@ -45,7 +45,7 @@ STATION_DETAIL_TABLE =  os.environ['STATION_DETAIL_TABLE']
 STATION_DETAIL_DATA_URL =  os.environ['STATION_DETAIL_DATA_URL']
 ES_FIREHOSE_STREAM_NAME_STATION_INFO = os.environ['FIREHOSE_STREAM_NAME_STATION_INFO']
 detailTable = dynamodb.Table(STATION_DETAIL_TABLE)
-stationDataURL = requests.get(URL=STATION_DETAIL_DATA_URL)
+stationDataURL = requests.get(STATION_DETAIL_DATA_URL)
 stations = json.loads(stationDataURL)
 
 for station in stations['data']['stations']:
