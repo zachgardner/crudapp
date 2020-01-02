@@ -58,7 +58,7 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-sessionStorage.setItem("APIGUrl", "https://" + "APIGATEWAY_REPLACE_ME");
+sessionStorage.setItem("APIGUrl", "APIGATEWAY_REPLACE_ME");
 
 var stationList = {}
 var stationURL = "https://gbfs.citibikenyc.com/gbfs/en/station_information.json"
