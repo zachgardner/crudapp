@@ -58,16 +58,7 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-sessionStorage.setItem("ESUrl", "http://" + "ESURL_REPLACE_ME");
-sessionStorage.setItem("APIGUrl", "http://" + "APIGATEWAY_REPLACE_ME");
-if (sessionStorage.getItem("ESUrl").startsWith("http://ESURL")) {
-	getESProperties();
-}
-
-function getESProperties(){
-	var ESUrl = prompt("Where is your Elastic Search Cluster", "https://search-bikedemo-2pkhvhryvuxh5xarhnnj5egvky.us-east-1.es.amazonaws.com");
-sessionStorage.setItem("ESUrl", ESUrl);
-}
+sessionStorage.setItem("APIGUrl", "https://" + "APIGATEWAY_REPLACE_ME");
 
 var stationList = {}
 var stationURL = "https://gbfs.citibikenyc.com/gbfs/en/station_information.json"
@@ -101,7 +92,7 @@ function getStations() {
   		type: "POST",
   		url: statusURL,
   		data: query,
-        contentType: "application/json",
+       		contentType: "application/json",
   		complete: function(response){
   		data = JSON.parse(response.responseText)
   		//lastUpdated = buildDate(data.hits.hits[0].last_updated)
