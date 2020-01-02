@@ -59,6 +59,7 @@ function numberWithCommas(x) {
 }
 
 sessionStorage.setItem("ESUrl", "http://" + "ESURL_REPLACE_ME");
+sessionStorage.setItem("APIGUrl", "http://" + "APIGATEWAY_REPLACE_ME");
 if (sessionStorage.getItem("ESUrl").startsWith("http://ESURL")) {
 	getESProperties();
 }
@@ -70,9 +71,9 @@ sessionStorage.setItem("ESUrl", ESUrl);
 
 var stationList = {}
 var stationURL = "https://gbfs.citibikenyc.com/gbfs/en/station_information.json"
-stationURL = sessionStorage.getItem("ESUrl") + "/stations/_search?pretty=true&q=*:*&size=928"
+stationURL = sessionStorage.getItem("APIGUrl") + "?action=stations"
 var statusURL = "https://gbfs.citibikenyc.com/gbfs/en/station_status.json"
-statusURL = sessionStorage.getItem("ESUrl") + "/stationsstatus/_search"
+statusURL = sessionStorage.getItem("APIGUrl") + "?action=stationStatus"
 
 $.getJSON(stationURL).done(function( data ) {
 	//console.log("data=" + data)
@@ -105,7 +106,7 @@ function getStations() {
   		data = JSON.parse(response.responseText)
   		//lastUpdated = buildDate(data.hits.hits[0].last_updated)
   		
-  		latest_item = sessionStorage.getItem("ESUrl") + "/stationsstatus/_search"
+  		latest_item = sessionStorage.getItem("APIGUrl") + "action=latest"
   		latest_payload = '{"size":1, "aggs" : {"last_reported" : { "max" : { "field" : "last_reported"}}}}'
   		postLatestDate(latest_item, latest_payload)
 
