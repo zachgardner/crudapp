@@ -114,7 +114,6 @@ function getStations() {
 			bikeAvailability = parseInt(item._source.num_bikes_available)
 			if(stationList[stationId] && stationList[stationId]._source){
 			bikesInService += (stationList[stationId]._source.capacity - item._source.num_bikes_available - item._source.num_bikes_disabled)
-			console.log(stationId)
 			color = 'green'
 			fillColor = '#0f3'
 			if (bikeAvailability <= 10 ) {
@@ -160,11 +159,10 @@ function getStations() {
 function postLatestDate(url,payload) {
     $.ajax({
         type: "GET",
-        url: "/proxy.php?url="+ url,
+        url: "/proxy.php?url="+ url+"&action=latest",
         contentType: "text/plain",
         dataType: "json",
         success: function(data) {
-            console.log(data)
 	  		var timeInSeconds = data.hits.hits[0]._source.last_reported;
 			var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
 			d.setUTCSeconds(timeInSeconds)
