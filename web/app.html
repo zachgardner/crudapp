@@ -175,8 +175,11 @@ function postLatestDate(url,payload) {
     });
 }
 
+(function() {
+	getStations();
 
-getStations();
+})();
+
 setInterval(getStations, 15000)
 </script>
 
