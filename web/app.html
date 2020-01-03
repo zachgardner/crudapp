@@ -163,7 +163,7 @@ function postLatestDate(url,payload) {
         contentType: "text/plain",
         dataType: "json",
         success: function(data) {
-	  		var timeInSeconds = data.aggregations.last_reported;
+	  		var timeInSeconds = data.aggregations.last_reported.value;
 			var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
 			d.setUTCSeconds(timeInSeconds)
 			lastUpdated = d
