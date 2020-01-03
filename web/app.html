@@ -107,7 +107,8 @@ function getStations() {
 		bikesInService = 0
 
 		$.each(stations, function( i, item) {
-			if (item._source){
+                        if (item.inner_hits.most_recent.hits.hits[0]._source){
+                        item = item.inner_hits.most_recent.hits.hits[0];
 			bikesAvailable += parseInt(item._source.num_bikes_available)
 			bikesDisabled += parseInt(item._source.num_bikes_disabled)
 			stationId = parseInt(item._source.station_id)
