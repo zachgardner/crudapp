@@ -65,7 +65,7 @@ var stationList = {}
 var stationURL = "https://gbfs.citibikenyc.com/gbfs/en/station_information.json"
 stationURL = sessionStorage.getItem("APIGUrl") + "?action=stations"
 var statusURL = "https://gbfs.citibikenyc.com/gbfs/en/station_status.json"
-statusURL = sessionStorage.getItem("APIGUrl") + "?action=stationStatus"
+statusURL = sessionStorage.getItem("APIGUrl") + "?action=stationsStatus"
 	
 $.getJSON("/proxy.php?url=" + stationURL).done(function( data ) {
 	//console.log("data=" + data)
