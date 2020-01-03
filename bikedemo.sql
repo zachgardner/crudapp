@@ -179,8 +179,8 @@ CREATE TABLE Old_Staff(
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 
-insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, Joined) values (2, 'Lane', 'Arthur', '8854 Kirkland Street ', 'United States', '1946-11-05', '2012-05-18'); 
-insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, Joined) values (3, 'Bailey', 'Carl', '970 Lillian Drive', 'United States', '1954-07-07', '2012-10-15');
+insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, Joined) values (2, 'Gardner', 'Zach', '8854 Kirkland Street ', 'United States', '1946-11-05', '2012-05-18'); 
+insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, Joined) values (3, 'Trihn', 'Loc', '970 Lillian Drive', 'United States', '1954-07-07', '2012-10-15');
 insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, Joined) values (4, 'Murray', 'Lori', '148 Victoria Parkway', 'United States', '1990-01-14', '2013-09-13');
 insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, Joined) values (5, 'Lewis', 'Nicole', '9 Washington Trail', 'United States', '1981-10-14', '2013-01-20');
 insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, Joined) values (6, 'Hall', 'Carol', '7298 Hanover Street ', 'United States', '1934-06-18', '2011-07-04');
