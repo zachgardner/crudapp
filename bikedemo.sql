@@ -190,8 +190,8 @@ insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, J
 insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, Joined) values (10, 'Reid', 'Evelyn', '62 2nd Avenue', 'United States', '1962-01-07', '2016-10-10');
 insert into Customer_Details (Customer_ID, Lname, Fname, Address, County, DOB, Joined) values (11, 'Watkins', 'Lillian', '90 Canal St', 'United States', '1994-05-15', '2014-05-19');    
 
-insert into Customers (Customer_ID, Username, Pass_word, Email, Phone) values (2, 'swilliams0', 't2hlBwO5i2bT', 'jcoleman0@jalbum.net', '7-(202)256-3821');
-insert into Customers (Customer_ID, Username, Pass_word, Email, Phone) values (3, 'bdean1', 'CCch4ln', 'jlane1@deviantart.com', '(720)876-7624');
+insert into Customers (Customer_ID, Username, Pass_word, Email, Phone) values (2, 'g@rdz', 't2hlBwO5i2bT', 'zachgardner@amz.net', '7-(202)256-3821');
+insert into Customers (Customer_ID, Username, Pass_word, Email, Phone) values (3, 'l0ctr!nh', 'CCch4ln', 'loctr@amz.com', '(720)876-7624');
 insert into Customers (Customer_ID, Username, Pass_word, Email, Phone) values (4, 'jnelson2', '1I7h500Y', 'mhicks2@yellowpages.com', '(342)834-7891');
 insert into Customers (Customer_ID, Username, Pass_word, Email, Phone) values (5, 'cholmes3', 'dOmYs7znu', 'ryoung3@unblog', '(517)172-1820');
 insert into Customers (Customer_ID, Username, Pass_word, Email, Phone) values (6, 'tpierce4', 'P9ZMck', 'loliver4@sbwire.com', '(209)278-7822');
