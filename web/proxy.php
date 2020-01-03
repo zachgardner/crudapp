@@ -1,5 +1,5 @@
 <?php
-$url = htmlspecialchars($_GET["url"]) . '?action=' . htmlspecialchars($_GET["action"]);
+$url = htmlspecialchars($_GET["url"]);
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
